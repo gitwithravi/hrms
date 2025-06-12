@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\Console\Commands\MakeModularFilamentResource;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
@@ -19,6 +20,13 @@ class AppServiceProvider extends ServiceProvider
         //
         parent::register();
         FilamentView::registerRenderHook('panels::body.end', fn(): string => Blade::render("@vite('resources/js/app.js')"));
+
+        // Register custom commands
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                MakeModularFilamentResource::class,
+            ]);
+        }
     }
 
     /**
